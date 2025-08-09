@@ -115,17 +115,9 @@ Bloch küresi, tek bir qubit'in kuantum durumunu geometrik olarak görselleştir
 
 Bir qubit'in genel durumu şu denklemle ifade edilir:
 
-∣ψ⟩=cos( 
-2
-θ
-​
- )∣0⟩+e 
-iϕ
- sin( 
-2
-θ
-​
- )∣1⟩
+<img width="296" height="47" alt="Opera Anlık Görüntü_2025-08-10_000410_chatgpt com" src="https://github.com/user-attachments/assets/aa926b43-5f59-40b3-9204-41555cdd4832" />
+
+
 Bu denklemde yer alan açılar, durumu küre üzerinde bir vektör olarak tanımlar:
 
 θ (theta): Kutup açısıdır. Z ekseni ile qubit'in durum vektörü arasındaki açıdır (0 ≤ θ ≤ π).
