@@ -44,13 +44,17 @@ docker run -p 8501:8501 <dockerhub_kullanici_adiniz>/quantum-simulator:latest
 
 ### Bloch Küresi
 
+Bloch küresi, bir qubit’in tüm olası durumlarını görselleştirir.
+
+![Bloch Sphere](images/bloch_sphere_example.png)
 
 
 ### Kuantum Teleportation Devresi
 
+Aşağıda, bir qubit’in durumunu fiziksel olarak taşımadan başka bir qubit’e aktarımını gösteren devre şeması yer alıyor.
 
+![Teleportation Circuit](images/teleportation_circuit_example.png)
 
-> **Not:** Eğer `images` klasöründe bu dosyalar yoksa `python generate_images.py` komutunu çalıştırın. Bu script, Matplotlib ile örnek görselleri oluşturur.
 
 ---
 
@@ -84,14 +88,27 @@ Secrets olarak aşağıdakileri eklemeniz gerekir:
 
 ### Bloch Küresi
 
-Bloch küresi, bir qubit'in kuantum durumunu görselleştirmek için kullanılan bir 3B küredir. Qubit'in genel durumu:
+Bloch küresi, tek bir qubit'in kuantum durumunu geometrik olarak görselleştirmek için kullanılan üç boyutlu bir küredir. Küre üzerindeki her bir nokta, qubit'in alabileceği saf durumlardan birine karşılık gelir.
 
-\(|\psi\rangle = \cos\left(\frac{\theta}{2}\right)|0\rangle + e^{i\phi} \sin\left(\frac{\theta}{2}\right)|1\rangle\)
+Bir qubit'in genel durumu şu denklemle ifade edilir:
 
-Burada:
+∣ψ⟩=cos( 
+2
+θ
+​
+ )∣0⟩+e 
+iϕ
+ sin( 
+2
+θ
+​
+ )∣1⟩
+Bu denklemde yer alan açılar, durumu küre üzerinde bir vektör olarak tanımlar:
 
-- \$\theta\$ → kutupsal açı
-- \$\phi\$ → faz açısı
+θ (theta): Kutup açısıdır. Z ekseni ile qubit'in durum vektörü arasındaki açıdır (0 ≤ θ ≤ π).
+
+φ (phi): Azimut açısıdır. X ekseninden başlayarak XY düzlemindeki faz açısını belirtir (0 ≤ φ < 2π).
+
 
 ### Kuantum Teleportation
 
