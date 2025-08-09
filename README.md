@@ -82,8 +82,6 @@ docker run -p 8501:8501 <dockerhub_kullanici_adiniz>/quantum-simulator:latest
 ### Kuantum Teleportation Devresi
 ![Teleportation Circuit](images/teleportation_circuit_example.png)
 
-> **Not:** `images` klasöründe dosyalar bulunmuyorsa `python generate_images.py` komutunu çalıştırın.
-
 ---
 
 ## 📜 Proje Yapısı
@@ -113,14 +111,28 @@ Secrets:
 
 **Bloch Küresi:** Qubit’in kuantum durumunu 3B küre üzerinde gösteren görselleştirme yöntemi.
 
-$$
-|\psiangle = \cos\left(rac{	heta}{2}ight)|0angle + e^{i\phi} \sin\left(rac{	heta}{2}ight)|1angle
-$$
+Bloch küresi, tek bir qubit'in kuantum durumunu geometrik olarak görselleştirmek için kullanılan üç boyutlu bir küredir. Küre üzerindeki her bir nokta, qubit'in alabileceği saf durumlardan birine karşılık gelir.
 
-Burada:
+Bir qubit'in genel durumu şu denklemle ifade edilir:
 
-- \(	heta\) → kutupsal açı
-- \(\phi\) → faz açısı
+∣ψ⟩=cos( 
+2
+θ
+​
+ )∣0⟩+e 
+iϕ
+ sin( 
+2
+θ
+​
+ )∣1⟩
+Bu denklemde yer alan açılar, durumu küre üzerinde bir vektör olarak tanımlar:
+
+θ (theta): Kutup açısıdır. Z ekseni ile qubit'in durum vektörü arasındaki açıdır (0 ≤ θ ≤ π).
+
+φ (phi): Azimut açısıdır. X ekseninden başlayarak XY düzlemindeki faz açısını belirtir (0 ≤ φ < 2π).
+
+Bu iki açı, küre üzerindeki bir noktanın koordinatlarını belirleyerek qubit'in durumunu net bir şekilde tanımlar.
 
 **Kuantum Teleportation:** Bilinmeyen bir kuantum durumunun fiziksel aktarım yapılmadan başka bir qubit’e iletilmesini sağlayan protokol.
 
