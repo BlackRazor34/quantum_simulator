@@ -1,11 +1,3 @@
-# streamlit_quantum_simulator_app.py
-# Expanded educational quantum simulator (NumPy-only)
-# - Deutsch–Jozsa (phase-oracle)
-# - Grover (small n)
-# - Single-qubit Bloch sphere visualization (matplotlib 3D)
-# - Quantum Teleportation (3-qubit) with step-by-step mode
-# - UI includes buttons to write Dockerfile and README to disk for easy deployment
-# Run: streamlit run streamlit_quantum_simulator_app.py
 
 import streamlit as st
 import numpy as np
@@ -16,8 +8,8 @@ import textwrap
 import os
 
 st.set_page_config(page_title="Kuantum Eğitimi - Genişletilmiş Simülatör", layout="wide")
-st.title("Kuantum Algoritma Eğitimi — Saf NumPy Simülatörü (Genişletilmiş)")
-st.markdown("Matplotlib 3D Bloch küresi, Teleportation demo, adım-adım yürütme")
+st.title("Kuantum Algoritma Eğitimi — NumPy Simülatörü (3D Bloch Sphere)")
+st.markdown("Matplotlib 3D Bloch küresi, Teleportation demo, Adım-Adım Yürütme")
 
 # ------------------ Linear-algebra helpers ------------------
 I2 = np.eye(2, dtype=complex)
@@ -55,12 +47,12 @@ def single_qubit_gate_on_n(gate, target, n):
 
 
 def cnot_on_n(control, target, n):
-    # Build 2^n x 2^n matrix for CNOT (works for small n)
+    
     N = 2**n
     U = np.zeros((N, N), dtype=complex)
     for i in range(N):
         b = list(map(int, format(i, f'0{n}b')))
-        if b[n-1-control] == 1:  # note: qubit ordering: 0 is leftmost in string; we use little-endian indexing
+        if b[n-1-control] == 1:  
             b2 = b.copy()
             b2[n-1-target] ^= 1
             j = int(''.join(map(str, b2)), 2)
@@ -86,8 +78,7 @@ def measure_counts(state, shots=1024):
 # ------------------ Bloch sphere helpers ------------------
 
 def bloch_from_statevec(statevec):
-    # statevec is length-2 vector (complex)
-    # compute Bloch vector components from density matrix rho = |psi><psi|
+  
     rho = np.outer(statevec, np.conj(statevec))
     x = np.real(np.trace(rho @ X))
     y = np.real(np.trace(rho @ Y))
@@ -96,19 +87,16 @@ def bloch_from_statevec(statevec):
 
 
 def single_qubit_reduced_state(full_state, target, n):
-    # compute reduced statevector amplitude for single qubit
-    # return statevector of single qubit in computational basis (length 2)
-    # compute density matrix of full system and partial trace
+    
     N = 2**n
     rho_full = np.outer(full_state, np.conj(full_state))
-    # indices ordering: we'll trace out all qubits except target
-    # build mapping of basis states
+
     rho_red = np.zeros((2,2), dtype=complex)
     for i in range(N):
         bi = list(map(int, format(i, f'0{n}b')))
         for j in range(N):
             bj = list(map(int, format(j, f'0{n}b')))
-            # if all other qubits equal -> contribute to reduced density
+            
             ok = True
             for q in range(n):
                 if q == target:
@@ -120,8 +108,7 @@ def single_qubit_reduced_state(full_state, target, n):
                 a = bi[target]
                 b = bj[target]
                 rho_red[a, b] += rho_full[i, j]
-    # now try to get a pure state vector from rho_red (if pure)
-    # if rank==1, eigenvector with largest eigenvalue
+ 
     vals, vecs = np.linalg.eigh(rho_red)
     idx = np.argmax(vals)
     eigval = vals[idx]
@@ -135,8 +122,8 @@ def single_qubit_reduced_state(full_state, target, n):
 
 
 def plot_bloch(ax, vec, title=''):
-    # vec is 3-element Bloch vector
-    # draw sphere
+   
+  
     u = np.linspace(0, 2 * np.pi, 60)
     v = np.linspace(0, np.pi, 30)
     x = np.outer(np.cos(u), np.sin(v))
@@ -199,17 +186,14 @@ def grover(n, target_index, iterations=None):
 # ------------------ Teleportation ------------------
 
 def teleportation_circuit_steps(initial_statevec):
-    # initial_statevec: length-2 vector for qubit |psi> to teleport (Alice's qubit)
-    # overall system: [psi, 0, 0] -> 3 qubits: psi, bell_a, bell_b
+    
     n = 3
-    # build initial full state
     psi = initial_statevec
     state = np.kron(np.kron(psi, np.array([1.0, 0.0], dtype=complex)), np.array([1.0, 0.0], dtype=complex))
 
     steps = []
     steps.append(('start', state.copy()))
-    # Step 1: create Bell pair between qubit1 (index 1) and qubit2 (index 2)
-    # apply H on qubit 1 (index 1 -> position 1), then CNOT(1->2)
+    
     U_h_q1 = single_qubit_gate_on_n(H, target=1, n=3)
     state = U_h_q1 @ state
     steps.append(('H on qubit1 (Bell prep)', state.copy()))
@@ -217,7 +201,7 @@ def teleportation_circuit_steps(initial_statevec):
     state = U_cnot_1_2 @ state
     steps.append(('CNOT qubit1->qubit2 (Bell pair)', state.copy()))
 
-    # Step 2: Alice applies CNOT(0->1) then H(0)
+
     U_cnot_0_1 = cnot_on_n(control=0, target=1, n=3)
     state = U_cnot_0_1 @ state
     steps.append(('CNOT qubit0->qubit1', state.copy()))
@@ -225,20 +209,17 @@ def teleportation_circuit_steps(initial_statevec):
     state = U_h_q0 @ state
     steps.append(('H on qubit0', state.copy()))
 
-    # Step 3: measure qubit0 and qubit1 (simulate classical results) and apply corrections on qubit2
-    # We will not collapse randomly here; instead we return the pre-measurement state and describe correction outcomes
+    
     steps.append(('pre-measurement (Alice measured qubit0 and qubit1)', state.copy()))
 
     return steps
 
 
 def apply_teleportation_measure_and_corrections(pre_measure_state, m0, m1):
-    # m0, m1 are measurement bits (0/1)
-    # After measuring, Bob's qubit (qubit2) may need X (if m1==1) and Z (if m0==1)
-    # We'll compute post-measurement collapsed state conditioned on (m0,m1)
+
     n = 3
     N = 2**n
-    # For each basis state index i, check bits of qubit0 and qubit1
+   
     collapsed = np.zeros(N, dtype=complex)
     for i in range(N):
         b = list(map(int, format(i, f'0{n}b')))
@@ -250,8 +231,7 @@ def apply_teleportation_measure_and_corrections(pre_measure_state, m0, m1):
     else:
         collapsed = collapsed / norm
 
-    # Now apply corrections on qubit2
-    # X if m1==1 on qubit2 -> apply X on target=2
+   
     if m1 == 1:
         Ux = single_qubit_gate_on_n(X, target=2, n=3)
         collapsed = Ux @ collapsed
@@ -298,7 +278,7 @@ if mode == 'Deutsch–Jozsa':
 
     with col2:
         st.subheader('Tek qubit Bloch (ilk qubit)')
-        # compute reduced of first qubit
+       
         if 'state' in locals():
             psi1, val = single_qubit_reduced_state(state, target=0, n=n)
             bloch = bloch_from_statevec(psi1)
@@ -373,7 +353,7 @@ elif mode == 'Teleportation':
     ax.set_ylabel('|amplitude|'); plt.xticks(rotation=45)
     st.pyplot(fig)
 
-    # Bloch of qubit0 and qubit2
+  
     psi0, val0 = single_qubit_reduced_state(state, target=0, n=3)
     psi2, val2 = single_qubit_reduced_state(state, target=2, n=3)
     colA, colB = st.columns(2)
@@ -406,7 +386,7 @@ elif mode == 'Adım-adım (Kapıları izle)':
     st.header('Adım-adım yürütme (örnek: Deutsch–Jozsa small)')
     n = st.slider('Qubit sayısı n', 1, 4, 2)
     oracle_type = st.selectbox('Oracle tipi', ['constant-0', 'balanced-parity'])
-    # build list of unitaries representing sequence of gates for Deutsch-Jozsa
+    
     seq = []
     Hn = kron_n([H]*n)
     seq.append(('H^n', Hn))
