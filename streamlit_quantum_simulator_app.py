@@ -17,7 +17,7 @@ import os
 
 st.set_page_config(page_title="Kuantum Eğitimi - Genişletilmiş Simülatör", layout="wide")
 st.title("Kuantum Algoritma Eğitimi — Saf NumPy Simülatörü (Genişletilmiş)")
-st.markdown("Matplotlib 3D Bloch küresi, Teleportation demo, adım-adım yürütme ve Docker/README yardımı içerir.")
+st.markdown("Matplotlib 3D Bloch küresi, Teleportation demo, adım-adım yürütme")
 
 # ------------------ Linear-algebra helpers ------------------
 I2 = np.eye(2, dtype=complex)
