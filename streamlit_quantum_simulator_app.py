@@ -447,59 +447,6 @@ elif mode == 'Adım-adım (Kapıları izle)':
     plot_bloch(axb, bloch_from_statevec(psi0))
     st.pyplot(figb)
 
-# ------------------ Dockerfile & README helper ------------------
-
-st.sidebar.header('Dosya oluşturucu')
-if st.sidebar.button('Dockerfile oluştur'):
-    dockerfile = textwrap.dedent('''
-    FROM python:3.10-slim
-    WORKDIR /app
-    RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
-    COPY requirements.txt ./
-    RUN pip install --no-cache-dir -r requirements.txt
-    COPY . .
-    EXPOSE 8501
-    CMD ["streamlit", "run", "streamlit_quantum_simulator_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
-    ''')
-    with open('Dockerfile', 'w', encoding='utf-8') as f:
-        f.write(dockerfile)
-    st.sidebar.success('Dockerfile oluşturuldu.')
-    st.sidebar.code(dockerfile)
-
-if st.sidebar.button('requirements.txt oluştur'):
-    req = 'streamlit\nnumpy\nmatplotlib\n'
-    with open('requirements.txt', 'w', encoding='utf-8') as f:
-        f.write(req)
-    st.sidebar.success('requirements.txt oluşturuldu.')
-    st.sidebar.code(req)
-
-if st.sidebar.button('README oluştur'):
-    readme = textwrap.dedent('''
-    # Streamlit Quantum Simulator (NumPy)
-
-    Bu repo, eğitim amaçlı hafif bir kuantum simülatörüdür. Qiskit gerektirmez — sadece NumPy ve Matplotlib kullanır.
-
-    ## Çalıştırma (lokal)
-    1. Python 3.8+ ortamı oluşturun ve aktive edin.
-    2. `pip install -r requirements.txt`
-    3. `streamlit run streamlit_quantum_simulator_app.py`
-
-    ## Docker
-    ```bash
-    docker build -t quantum-sim:latest .
-    docker run -p 8501:8501 quantum-sim:latest
-    ```
-
-    ## İçerik
-    - Deutsch–Jozsa demo
-    - Grover (küçük n)
-    - Teleportation (adım-adım) ve Bloch küresi görselleştirmesi
-
-    ''')
-    with open('README.md', 'w', encoding='utf-8') as f:
-        f.write(readme)
-    st.sidebar.success('README oluşturuldu.')
-    st.sidebar.code(readme)
 
 st.sidebar.markdown('---')
 st.sidebar.caption('Not: Büyük qubit sayıları hesaplama karmaşıklığı (2^n) nedeniyle yavaş olacaktır.')
