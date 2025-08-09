@@ -1,24 +1,35 @@
+# Bu GitHub Actions iş akışı, main dalına her push yapıldığında tetiklenir.
+# Docker imajını oluşturur ve Docker Hub'a gönderir.
+
 name: Build and Push Docker Image
 
 on:
+  # "main" dalına yapılan push işlemlerinde çalışır.
   push:
     branches: ["main"]
 
 jobs:
-  build:
+  build-and-push:
+    # İşin çalışacağı sanal makineyi belirtir.
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
+    steps:
+      # 1. Adım: Depodaki kodları sanal makineye indirir.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Adım: Docker Hub'a giriş yapar.
+      # GitHub Secrets'tan alınan kullanıcı adı ve token kullanılır.
       - name: Log in to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
+      # 3. Adım: Docker imajını oluşturur ve Docker Hub'a gönderir.
+      # İmaj, "kullanici_adi/depo_adi:latest" olarak etiketlenir.
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: true
